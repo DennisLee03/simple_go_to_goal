@@ -5,7 +5,7 @@ float64 y
 ---
 # The result message
 bool success
-float64 elapsed_time
+float64 elapsed_time    # in seconds
 
 ---
 # The feedback message
