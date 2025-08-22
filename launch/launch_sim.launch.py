@@ -12,7 +12,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
 
-    package_name='demo_diff_drive_pkg'
+    package_name='simple_go_to_goal'
 
     # ros2 run robot_state_publisher robot_state_publisher --ros-args -p robot_description:="$(xacro /path/to/robot.urdf.xacro sim_mode:=true)"
     rsp = IncludeLaunchDescription(

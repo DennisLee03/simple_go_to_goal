@@ -13,7 +13,7 @@ def generate_launch_description():
     use_ros2_control = LaunchConfiguration('use_ros2_control')
 
     # process urdf
-    pkg_path = os.path.join(get_package_share_directory('demo_diff_drive_pkg'))
+    pkg_path = os.path.join(get_package_share_directory('simple_go_to_goal'))
     xacro_file = os.path.join(pkg_path, 'description', 'robot.urdf.xacro')
     # description:="$(xacro path/to/robot.urdf.xacro)"
     robot_description_config = Command([

@@ -4,7 +4,7 @@
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
-#include "demo_diff_drive_pkg/PID_control.hpp"
+#include "simple_go_to_goal/PID_control.hpp"
 
 class SimpleGoToGoalNode: public rclcpp::Node
 {
