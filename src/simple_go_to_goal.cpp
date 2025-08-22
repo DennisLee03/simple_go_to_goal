@@ -6,6 +6,8 @@
 
 #include "simple_go_to_goal/PID_control.hpp"
 
+const double DISTANCE_THRESHOLD = 0.07;
+
 class SimpleGoToGoalNode: public rclcpp::Node
 {
     public:
@@ -64,11 +66,17 @@ class SimpleGoToGoalNode: public rclcpp::Node
             // Use the calculated outputs for the linear and angular commands
             twist_msg.linear.x = linear_output;
             twist_msg.angular.z = angular_output;
+            RCLCPP_INFO(this->get_logger(), "Current Linear Velocity = %.2f m/s", twist_msg.linear.x);
+            RCLCPP_INFO(this->get_logger(), "Current Angular Velocity = %.2f rad/s", twist_msg.angular.z);
+            RCLCPP_INFO(this->get_logger(), "Distance Remain = %.2f m", distance_to_goal);
 
             // Add a stop condition for when the robot is close to the goal
-            if (distance_to_goal < 0.1) {
+            if (distance_to_goal < DISTANCE_THRESHOLD) {
                 twist_msg.linear.x = 0.0;
                 twist_msg.angular.z = 0.0;
+                RCLCPP_INFO(this->get_logger(), "Current Linear Velocity = %.2f m/s", twist_msg.linear.x);
+                RCLCPP_INFO(this->get_logger(), "Current Angular Velocity = %.2f rad/s", twist_msg.angular.z);
+                RCLCPP_INFO(this->get_logger(), "Distance Remain = %.2f m", distance_to_goal);
                 RCLCPP_INFO(this->get_logger(), "Goal reached!");
                 publisher_->publish(twist_msg);
                 rclcpp::shutdown();
