@@ -6,7 +6,7 @@
 
 #include "simple_go_to_goal/PID_control.hpp"
 
-const double DISTANCE_THRESHOLD = 0.07;
+const double DISTANCE_THRESHOLD = 0.1;
 
 class SimpleGoToGoalNode: public rclcpp::Node
 {
@@ -14,8 +14,8 @@ class SimpleGoToGoalNode: public rclcpp::Node
         SimpleGoToGoalNode(): 
         Node("simple_go_to_goal_node"),
         // Kp, Ki, Kd, max_integral, max_output(cmd_vel)
-        linear_controller_(0.5, 0.01, 0.2, 2.0, 1.0), 
-        angular_controller_(0.8, 0.02, 0.1, 2.0, 2.1)
+        linear_controller_(0.3, 0.01, 1.0, 0.8, 0.6), 
+        angular_controller_(0.5, 0.0, 0.0, 1.0, 1.0)
         {
             subscription_ = this->create_subscription<nav_msgs::msg::Odometry>(
                 "odom", 10, 
@@ -58,7 +58,7 @@ class SimpleGoToGoalNode: public rclcpp::Node
 
             // Calculate the PID outputs for both linear and angular velocity
             double linear_output = linear_controller_.pid_calc(0.0, -distance_to_goal); // target is 0, response is -distance
-            double angular_output = 1.0*angle_diff; // angular_controller_.pid_calc(0.0, -angle_diff); // target is 0, response is -angle
+            double angular_output = angular_controller_.pid_calc(0.0, -angle_diff); // target is 0, response is -angle
 
             auto twist_msg = geometry_msgs::msg::Twist();
 
@@ -69,18 +69,6 @@ class SimpleGoToGoalNode: public rclcpp::Node
             RCLCPP_INFO(this->get_logger(), "Current Linear Velocity = %.2f m/s", twist_msg.linear.x);
             RCLCPP_INFO(this->get_logger(), "Current Angular Velocity = %.2f rad/s", twist_msg.angular.z);
             RCLCPP_INFO(this->get_logger(), "Distance Remain = %.2f m", distance_to_goal);
-
-            // Add a stop condition for when the robot is close to the goal
-            if (distance_to_goal < DISTANCE_THRESHOLD) {
-                twist_msg.linear.x = 0.0;
-                twist_msg.angular.z = 0.0;
-                RCLCPP_INFO(this->get_logger(), "Current Linear Velocity = %.2f m/s", twist_msg.linear.x);
-                RCLCPP_INFO(this->get_logger(), "Current Angular Velocity = %.2f rad/s", twist_msg.angular.z);
-                RCLCPP_INFO(this->get_logger(), "Distance Remain = %.2f m", distance_to_goal);
-                RCLCPP_INFO(this->get_logger(), "Goal reached!");
-                publisher_->publish(twist_msg);
-                rclcpp::shutdown();
-            }
 
             publisher_->publish(twist_msg);
         }

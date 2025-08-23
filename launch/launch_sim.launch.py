@@ -29,7 +29,7 @@ def generate_launch_description():
     # TODO: change to Ignition
     spawn_entity = Node(package='gazebo_ros', 
                         executable='spawn_entity.py',
-                        arguments=['-topic', 'robot_description', '-entity', 'my_bot'],
+                        arguments=['-topic', 'robot_description', '-entity', 'my_bot', '-timeout', '60'],
                         output='screen')
 
     return LaunchDescription([
