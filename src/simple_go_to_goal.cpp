@@ -14,7 +14,7 @@ class SimpleGoToGoalNode: public rclcpp::Node
         SimpleGoToGoalNode(): 
         Node("simple_go_to_goal_node"),
         // Kp, Ki, Kd, max_integral, max_output(cmd_vel)
-        linear_controller_(0.5, 0.01, 0.01, 0.02, 0.6), 
+        linear_controller_(0.5, 0.015, 0.01, 0.02, 0.6), 
         angular_controller_(0.5, 0.01, 0.01, 0.02, 0.8)
         {
             subscription_ = this->create_subscription<nav_msgs::msg::Odometry>(
